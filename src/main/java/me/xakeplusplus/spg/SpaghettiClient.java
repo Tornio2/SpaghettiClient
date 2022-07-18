@@ -3,6 +3,8 @@ package me.xakeplusplus.spg;
 import me.xakeplusplus.spg.event.EventProcessor;
 import me.xakeplusplus.spg.module.Module;
 import me.xakeplusplus.spg.module.ModuleManager;
+import me.xakeplusplus.spg.setting.SettingsManager;
+import me.xakeplusplus.spg.ui.clickgui.ClickGui;
 import me.zero.alpine.EventManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,10 +20,12 @@ import org.lwjgl.input.Keyboard;
 @Mod(modid = Reference.MOD_ID, name = Reference.NAME, version = Reference.VERSION)
 public class SpaghettiClient {
     private Minecraft mc = Minecraft.getMinecraft();
-
+    
+    public static final EventManager EVENT_BUS = new EventManager();
+    public SettingsManager settingsManager;
     public static ModuleManager moduleManager;
     public static EventProcessor eventProcessor;
-    public static final EventManager EVENT_BUS = new EventManager();
+    public static ClickGui clickGui;
     public static final Logger log = LogManager.getLogger("spaghetti-client");
     
     @Mod.Instance
@@ -31,10 +35,14 @@ public class SpaghettiClient {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(instance);
+        settingsManager = new SettingsManager();
+        log.info("Settings Manager Initialized");
         moduleManager = new ModuleManager();
         log.info("Module Manager Initialized");
         eventProcessor = new EventProcessor();
         log.info("Event Processor Initialized.");
+        clickGui = new ClickGui();
+        log.info("ClickGui Initialized");
     }
 
     @SubscribeEvent
@@ -57,5 +65,9 @@ public class SpaghettiClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public SettingsManager getSettingsManager() {
+    	return settingsManager;
     }
 }
